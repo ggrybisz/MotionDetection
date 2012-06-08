@@ -1,0 +1,13 @@
+﻿<Window x:Class="MotionDetection.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="391" Width="525">
+    <Grid Width="502">
+        <Menu HorizontalAlignment="Left" Margin="0,0,0,329" Name="menu1" Width="503">
+            <MenuItem Header="Plik">
+                <MenuItem Header="Otwórz" Click="OpenFile_Click" />
+            </MenuItem>
+        </Menu>
+        <MediaElement Height="311" HorizontalAlignment="Left" Margin="12,29,0,0" Name="mainMovieMediaElement" VerticalAlignment="Top" Width="478" />
+    </Grid>
+</Window>
