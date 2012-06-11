@@ -40,27 +40,25 @@ namespace MotionDetection
         {
             if (videoReader.IsOpen)
             {
-                Bitmap background = videoReader.ReadVideoFrame();
-  
                 Bitmap videoFrame;
+
+                processor.Background = videoReader.ReadVideoFrame();
 
                 while((videoFrame = videoReader.ReadVideoFrame())!=null)
                 {
-                    Bitmap diff = processor.findDifference(background, videoFrame);
-
-                  //diffrencePictures.Add(VideoProcessor.convertBitmap(diff));
+                    Bitmap diff = processor.findDifference(videoFrame);
                   
                     this.Dispatcher.Invoke(new Action(() => differenceImage.Source = VideoProcessor.convertBitmap(diff)));
                     
-                    Bitmap final = processor.showMotion(background, diff);
+                    Bitmap final = processor.showMotion(videoFrame, diff);
                     this.Dispatcher.Invoke(new Action(() => finalImage.Source = VideoProcessor.convertBitmap(final)));
-                    
+            
                     videoFrame.Dispose();
                     diff.Dispose();
-                    final.Dispose();
+                   // final.Dispose();
                     System.Console.Out.WriteLine("PROCESS MOVIE frame " + diffrencePictures.Count);
                 }
-                background.Dispose();
+               
                 videoReader.Close();
                 videoReader.Dispose();
             }
