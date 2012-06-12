@@ -96,5 +96,10 @@ namespace MotionDetection
                // updateImagesThread.Start();
             }
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            processMovieThread.Abort();
+        }
     }
 }

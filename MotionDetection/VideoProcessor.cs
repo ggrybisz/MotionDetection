@@ -70,7 +70,7 @@ namespace MotionDetection
             moveTowardsFilter = new MoveTowards();
 
             filters1 = new FiltersSequence();
-            filters1.Add(pixelateFilter);
+          //  filters1.Add(pixelateFilter);
             filters1.Add(grayscaleFilter);
             
             filters2 = new FiltersSequence();
@@ -119,6 +119,7 @@ namespace MotionDetection
 
                 //morphFilter.OverlayImage = tmpImage;
                 //morphFilter.ApplyInPlace(this.background);
+                moveTowardsFilter.StepSize = 50;
                 moveTowardsFilter.OverlayImage = tmpImage;
                 moveTowardsFilter.ApplyInPlace(this.background);
               //  this.background = (Bitmap) tmpImage.Clone();
