@@ -49,19 +49,24 @@ namespace MotionDetection
 
                     Bitmap diff = processor.findDifference(preprocess);
                     preprocess.Dispose();
+                    preprocess = null;
                   
                     this.Dispatcher.Invoke(new Action(() => differenceImage.Source = VideoProcessor.convertBitmap(diff)));
                     
                     Bitmap final = processor.showMotion(videoFrame, diff);
                     diff.Dispose();
+                    diff = null;
 
                     this.Dispatcher.Invoke(new Action(() => finalImage.Source = VideoProcessor.convertBitmap(final)));
                     final.Dispose();
+                    final = null;
                     videoFrame.Dispose();
+                    videoFrame = null;
                 }
                 i = 0;
                 videoReader.Dispose();
                 videoReader.Close();
+                
                 
             }
         }
