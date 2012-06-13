@@ -46,8 +46,8 @@ namespace MotionDetection
         FiltersSequence filters1;
         FiltersSequence filters2;
 
-        Vector rat1;
-        Vector rat2;
+        Tracker rat1;
+        Tracker rat2;
 
         private int counter;
         private int height;
@@ -82,8 +82,9 @@ namespace MotionDetection
             filters2.Add(thresholdFilter);
             filters2.Add(erosionFilter);
 
-            rat1 = new Vector(640 / 2, 480 / 2);
-            rat2 = new Vector(0, 0);
+            rat1 = new Tracker(640 / 2, 480 / 2, Color.Red);
+
+            rat2 = new Tracker(400, 300, Color.Green);
 
             counter = 0;
         }
@@ -148,62 +149,37 @@ namespace MotionDetection
             // get object rectangles
             blobCounter.ProcessImage(motionImage);
             Rectangle[] rects = blobCounter.GetObjectsRectangles();
+
             // create graphics object from initial image
             Graphics g = Graphics.FromImage(originalImage);
             // draw each rectangle
 
-            Vector TopLeft = new Vector(640, 480);
-            Vector BottomRight = new Vector(0, 0);
-
-
-
-            Pen redPen = new Pen(Color.Red, 4);
             Pen bluePen = new Pen(Color.Blue, 1);
-            Pen orangePen = new Pen(Color.Orange, 2);
-
-            int centerX = 0;
-            int centerY = 0;
-
 
             foreach (Rectangle rc in rects)
             {
-
-
                 g.DrawRectangle(bluePen, rc);
 
-                if (rc.X < TopLeft.X)
-                    TopLeft.X = rc.X;
-                if (rc.Y < TopLeft.Y)
-                    TopLeft.Y = rc.Y;
+                rat1.checkRectangleProximity(rc);
+               
 
-                if (rc.X > BottomRight.X)
-                    BottomRight.X = rc.X;
-
-                if (rc.Y > BottomRight.Y)
-                    BottomRight.Y = rc.Y;
-
-                centerX = ((int)BottomRight.X - (int)TopLeft.X) / 2 + (int)TopLeft.X;
-                centerY = ((int)BottomRight.Y - (int)TopLeft.Y) / 2 + (int)TopLeft.Y;
-
-                if ((Math.Abs(centerX - rat1.X) < 50) && (Math.Abs(centerY - rat1.Y) < 50))
-                {
-                    rat1.X = centerX;
-                    rat1.Y = centerY;
-                }
-
+                rat2.checkRectangleProximity(rc);
+                
             }
+            rat1.computeCenter();
+            rat2.computeCenter();
 
-            g.DrawEllipse(orangePen, new Rectangle(centerX - 10, centerY - 10, 20, 20));
-            g.DrawEllipse(redPen, new Rectangle((int)rat1.X - 10, (int)rat1.Y - 10, 20, 20));
-            g.DrawRectangle(orangePen, new Rectangle((int)rat1.X - 50, (int)rat1.Y - 50, 100, 100));
+            rat2.compareAndChange(rat1);
 
-
-            redPen.Dispose();
+            rat1.drawTracker(g);
+            rat2.drawTracker(g);
+            
             bluePen.Dispose();
-            orangePen.Dispose();
             g.Dispose();
 
             return originalImage;
         }
+
+       
     }
 }
