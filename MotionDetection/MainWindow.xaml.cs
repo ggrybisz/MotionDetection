@@ -8,7 +8,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Collections.Concurrent;
 using System.Threading;
-//dodalem cos:P k.bzowski
 
 namespace MotionDetection
 {

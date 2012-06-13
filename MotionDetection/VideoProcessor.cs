@@ -9,6 +9,8 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Drawing.Imaging;
 using AForge.Imaging;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace MotionDetection
 {
@@ -91,17 +93,29 @@ namespace MotionDetection
 
         public static BitmapSource convertBitmap(Bitmap source)
         {
-            System.Console.WriteLine("source image width" + source.Width);
-            System.Console.WriteLine("source image height" + source.Height);
+            BitmapSource bitSrc = null;
 
-            IntPtr ip = source.GetHbitmap();
-            BitmapSource bs = null;
+            var hBitmap = source.GetHbitmap();
 
-            bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(ip,
-               IntPtr.Zero, Int32Rect.Empty,
-               System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+            try
+            {
+                bitSrc = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                    hBitmap,
+                    IntPtr.Zero,
+                    Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
+            }
+            catch (Win32Exception)
+            {
+                bitSrc = null;
+            }
+            finally
+            {
+                
+                NativeMethods.DeleteObject(hBitmap);
+            }
 
-            return bs;
+            return bitSrc;
         }
 
         public Bitmap preprocessImage(Bitmap currentFrame)
@@ -179,7 +193,12 @@ namespace MotionDetection
 
             return originalImage;
         }
-
+        internal static class NativeMethods
+        {
+            [DllImport("gdi32.dll")]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool DeleteObject(IntPtr hObject);
+        }
        
     }
 }
