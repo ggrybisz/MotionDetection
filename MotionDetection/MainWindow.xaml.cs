@@ -21,9 +21,6 @@ namespace MotionDetection
         VideoFileReader videoReader;
 
         Thread processMovieThread;
-        Thread updateImagesThread;
-
-        BlockingCollection<BitmapSource> diffrencePictures = new BlockingCollection<BitmapSource>();
 
         public MainWindow()
         {
@@ -32,8 +29,6 @@ namespace MotionDetection
             processMovieThread = new Thread(new ThreadStart(processMovie));
             processMovieThread.Name = "PROCESS MOVIE THREAD";
 
-            updateImagesThread = new Thread(new ThreadStart(updateScreens));
-            updateImagesThread.Name = "UPDATE IMAGES THREAD";
         }
 
         private void processMovie()
@@ -44,40 +39,36 @@ namespace MotionDetection
 
                 processor.Background = videoReader.ReadVideoFrame();
 
+                int i=0;
+
                 while((videoFrame = videoReader.ReadVideoFrame())!=null)
                 {
-                    Bitmap diff = processor.findDifference(videoFrame);
+                    Bitmap preprocess = processor.preprocessImage(videoFrame);
+                    this.Dispatcher.Invoke(new Action(() => FrameCountLabel.Content = "Frame: " + ++i));
+                    this.Dispatcher.Invoke(new Action(() => preprocessedImage.Source = VideoProcessor.convertBitmap(preprocess)));
+
+                    Bitmap diff = processor.findDifference(preprocess);
+                    preprocess.Dispose();
                   
                     this.Dispatcher.Invoke(new Action(() => differenceImage.Source = VideoProcessor.convertBitmap(diff)));
                     
                     Bitmap final = processor.showMotion(videoFrame, diff);
-                    this.Dispatcher.Invoke(new Action(() => finalImage.Source = VideoProcessor.convertBitmap(final)));
-            
-                    videoFrame.Dispose();
                     diff.Dispose();
-                   // final.Dispose();
-                    System.Console.Out.WriteLine("PROCESS MOVIE frame " + diffrencePictures.Count);
-                }
-               
-                videoReader.Close();
-                videoReader.Dispose();
-            }
-        }
 
-        private void updateScreens()
-        {
-            System.Console.Out.WriteLine("UPDATE SCREEN START");
-            while (true)
-            {
+                    this.Dispatcher.Invoke(new Action(() => finalImage.Source = VideoProcessor.convertBitmap(final)));
+                    final.Dispose();
+                    videoFrame.Dispose();
+                }
+                i = 0;
+                videoReader.Dispose();
+                videoReader.Close();
                 
-                BitmapSource item = diffrencePictures.Take(); //jeśli kolejka jest pusta, blokuje wątek
-                item.Dispatcher.Invoke(new Action(() => differenceImage.Source = item));
-                System.Console.Out.WriteLine("UPDATE SCREEN LOOP");
             }
         }
 
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
+      
             processor = new VideoProcessor();
             videoReader = new VideoFileReader();
 
@@ -88,12 +79,8 @@ namespace MotionDetection
                 Uri path = new Uri(dialog.FileName);
                 videoReader.Open(path.OriginalString);
 
-                originalMediaElement.Source = path;
-                originalMediaElement.IsMuted = true;
-                originalMediaElement.LoadedBehavior = MediaState.Play;
-
                 processMovieThread.Start();
-               // updateImagesThread.Start();
+               
             }
         }
 

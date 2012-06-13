@@ -25,7 +25,7 @@ namespace MotionDetection
         }
         BitmapData bitmapData;
 
-        IFilter pixelateFilter;
+        Pixellate pixelateFilter;
 
         Difference differenceFilter;
         Threshold thresholdFilter;
@@ -35,7 +35,6 @@ namespace MotionDetection
         Dilatation dilatationFilter;
         Edges edgesFilter;
 
-        Morph morphFilter;
         MoveTowards moveTowardsFilter;
 
         IFilter extractChannel;
@@ -43,6 +42,9 @@ namespace MotionDetection
 
         FiltersSequence filters1;
         FiltersSequence filters2;
+
+        Vector rat1;
+        Vector rat2;
 
         private int counter;
         private int height;
@@ -53,6 +55,7 @@ namespace MotionDetection
             background = null;
 
             pixelateFilter = new Pixellate();
+            pixelateFilter.PixelSize = 10;
 
             differenceFilter = new Difference();
             thresholdFilter = new Threshold(15);
@@ -62,23 +65,22 @@ namespace MotionDetection
             dilatationFilter = new Dilatation();
             edgesFilter = new Edges();
 
-            morphFilter = new Morph();
-            morphFilter.SourcePercent = 90.0;
-
             extractChannel = new ExtractChannel(RGB.R);
             mergeFilter = new Merge();
             moveTowardsFilter = new MoveTowards();
 
             filters1 = new FiltersSequence();
-          //  filters1.Add(pixelateFilter);
+            filters1.Add(pixelateFilter);
             filters1.Add(grayscaleFilter);
             
             filters2 = new FiltersSequence();
 
             filters2.Add(differenceFilter);
             filters2.Add(thresholdFilter);
-            //filters.Add(dilatationFilter);
-           // filters.Add(edgesFilter);
+            filters2.Add(erosionFilter);
+
+            rat1 = new Vector(0, 0);
+            rat2 = new Vector(0, 0);
 
             counter = 0;
         }
@@ -94,35 +96,29 @@ namespace MotionDetection
             bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(ip,
                IntPtr.Zero, Int32Rect.Empty,
                System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+
             return bs;
+        }
+
+        public Bitmap preprocessImage(Bitmap currentFrame)
+        {
+            return filters1.Apply(currentFrame);
         }
 
         public Bitmap findDifference(Bitmap currentFrame)
         {
-            /*
-            if (this.background == null)
-            {
-                //stwórz tło za po raz pierwszy;
-                Bitmap tmp = this.pixelateFilter.Apply(currentFrame);
-                background = tmp;
-                height = background.Height;
-                width = background.Width;
-                tmp.Dispose();
-                return background;
-            }*/
 
-            Bitmap tmpImage = filters1.Apply(currentFrame);
+            Bitmap tmpImage = currentFrame;
 
             if (++counter == 2)
             {
                 counter = 0;
 
-                //morphFilter.OverlayImage = tmpImage;
-                //morphFilter.ApplyInPlace(this.background);
-                moveTowardsFilter.StepSize = 50;
+
+                moveTowardsFilter.StepSize = 100;
                 moveTowardsFilter.OverlayImage = tmpImage;
                 moveTowardsFilter.ApplyInPlace(this.background);
-              //  this.background = (Bitmap) tmpImage.Clone();
+
             }
 
 
@@ -133,10 +129,7 @@ namespace MotionDetection
             System.Console.WriteLine("background = "+background.PixelFormat.ToString());
             System.Console.WriteLine("image = " + tmpImage.PixelFormat.ToString());
 
-            differenceFilter.ApplyInPlace(bitmapData);
-            thresholdFilter.ApplyInPlace(bitmapData);
-
-            Bitmap tmpImage2 = dilatationFilter.Apply(bitmapData);
+            Bitmap tmpImage2 = filters2.Apply(bitmapData);
 
             tmpImage.UnlockBits(bitmapData);
             tmpImage.Dispose();
@@ -146,24 +139,73 @@ namespace MotionDetection
 
         public Bitmap showMotion(Bitmap originalImage, Bitmap motionImage)
         {
-            // czerwony kanał z oryginalnego obrazu
-            //IFilter extrachChannel = new ExtractChannel(RGB.R);
-            Bitmap redChannel = extractChannel.Apply(originalImage);
-            
-            //  merge red channel with motion regions
-            //Merge mergeFilter = new Merge();
-            mergeFilter.OverlayImage = motionImage;
-            Bitmap tmp4 = mergeFilter.Apply(redChannel);
-           
-            // replace red channel in the original image
-           
-            ReplaceChannel replaceChannel = new ReplaceChannel(RGB.R, tmp4);
-            
-            Bitmap tmp5 = replaceChannel.Apply(originalImage);
 
-            redChannel.Dispose();
-            tmp4.Dispose();
-            return tmp5;
+            BlobCounter blobCounter = new BlobCounter();
+
+            // get object rectangles
+            blobCounter.ProcessImage(motionImage);
+            Rectangle[] rects = blobCounter.GetObjectsRectangles();
+            // create graphics object from initial image
+            Graphics g = Graphics.FromImage(originalImage);
+            // draw each rectangle
+
+            Vector TopLeft = new Vector(640/2, 480/2);
+            Vector BottomRight = new Vector(640/2, 480/2);
+            
+
+
+            using (Pen pen = new Pen(Color.Red, 2))
+            {
+                Pen bluePen = new Pen(Color.Blue, 1);
+                foreach (Rectangle rc in rects)
+                {
+                    g.DrawRectangle(bluePen, rc);
+
+                    if (rc.X < TopLeft.X)
+                        TopLeft.X = rc.X;
+
+                    if (rc.Y < TopLeft.Y)
+                        TopLeft.Y = rc.Y;
+
+                    if (rc.X > BottomRight.X)
+                        BottomRight.X = rc.X;
+
+                    if (rc.Y > BottomRight.Y)
+                        BottomRight.Y = rc.Y;
+
+                    if (rat1.X == 0)
+                    {
+                        rat1.X = rc.X;
+                        rat1.Y = rc.Y;
+                    }
+
+                    int centerX = ((int)BottomRight.X - (int)TopLeft.X) / 2;
+                    int centerY = ((int)BottomRight.Y - (int)TopLeft.Y) / 2;
+
+                    rat1.X = TopLeft.X;
+                    rat1.Y = TopLeft.Y;
+                    
+                    //if ((rc.Width > 15) && (rc.Height > 15))
+                    //{
+                   /* if (Math.Abs((rc.X + rc.Width / 2) - rat1.X) < 100)
+                        {
+                            rat1.X = rc.X+rc.Width/2;
+                            
+                        }
+
+                        if(Math.Abs((rc.Y+rc.Height/2) - rat1.Y) < 100)
+                        {
+                            rat1.Y = rc.Y+rc.Height/2;
+                        }
+                   // }*/
+                }
+
+                g.DrawRectangle(pen, new Rectangle((int)rat1.X - 10, (int)rat1.X - 10, 20, 20));
+            }
+
+            g.Dispose();
+
+            return originalImage;
         }
     }
 }
