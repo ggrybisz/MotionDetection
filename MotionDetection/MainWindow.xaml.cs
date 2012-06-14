@@ -16,6 +16,8 @@ namespace MotionDetection
     /// </summary>
     public partial class MainWindow : Window
     {
+        string path;
+
         VideoProcessor processor;
         VideoFileReader videoReader;
 
@@ -80,10 +82,10 @@ namespace MotionDetection
 
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Uri path = new Uri(dialog.FileName);
-                videoReader.Open(path.OriginalString);
+                path = dialog.FileName;
+                videoReader.Open(path);
 
-                processMovieThread.Start();
+                //processMovieThread.Start();
                
             }
         }
@@ -91,6 +93,21 @@ namespace MotionDetection
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             processMovieThread.Abort();
+        }
+
+        private void button1_Click(object sender, RoutedEventArgs e)
+        {
+            if ((processMovieThread.ThreadState == ThreadState.Unstarted) || (processMovieThread.ThreadState == ThreadState.Aborted))
+            {
+                processMovieThread.Start();
+                button1.Content = "Stop";
+            }
+            else
+            {
+                processMovieThread.Abort();
+
+                button1.Content = "Play";
+            }
         }
     }
 }

@@ -1,17 +1,26 @@
 ﻿<Window x:Class="MotionDetection.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="671" Width="1024" Closing="Window_Closing">
-    <Grid Width="996" Height="552">
-        <Menu HorizontalAlignment="Left" Margin="0,-31,0,558" Name="menu1" Width="996">
-            <MenuItem Header="Plik">
-                <MenuItem Header="Otwórz" Click="OpenFile_Click" />
+        Title="MainWindow" Height="600" Width="1024" Closing="Window_Closing">
+    <DockPanel>
+
+        <Menu DockPanel.Dock="Top" Name="menu1" Width="996">
+            <MenuItem Header="File">
+                <MenuItem Header="Open" Click="OpenFile_Click" />
             </MenuItem>
-            
         </Menu>
-        <Label Name="FrameCountLabel" Content="Frame: "></Label>
-        <Image Height="240" HorizontalAlignment="Left" Margin="12,29,0,0" Name="preprocessedImage" Stretch="Fill" VerticalAlignment="Top" Width="320" />
-        <Image Height="480" HorizontalAlignment="Left" Margin="338,29,0,0" Name="finalImage" Stretch="Fill" VerticalAlignment="Top" Width="640" />
-        <Image Height="240" HorizontalAlignment="Left" Margin="12,275,0,0" Name="differenceImage" Stretch="Fill" VerticalAlignment="Top" Width="320" />
-    </Grid>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="338*" />
+                <ColumnDefinition Width="658*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Name="FrameCountLabel" Grid.Column="0" Content="Frame: "></Label>
+            <Image Height="240" HorizontalAlignment="Left" Margin="12,29,0,0" Grid.Column="0"  Name="preprocessedImage" Stretch="Fill" VerticalAlignment="Top" Width="320" />
+            <Image Height="480" HorizontalAlignment="Left" Margin="6,29,0,0" Grid.Column="1" Name="finalImage" Stretch="Fill" VerticalAlignment="Top" Width="640" />
+            <Image Height="240" HorizontalAlignment="Left" Margin="12,275,0,0" Grid.Column="0" Name="differenceImage" Stretch="Fill" VerticalAlignment="Top" Width="320" />
+            <Button Content="Play" Grid.Column="1" Height="23" HorizontalAlignment="Left" Margin="6,6,0,0" Name="button1" VerticalAlignment="Top" Width="75" Click="button1_Click" />
+        </Grid>
+    </DockPanel>
 </Window>
