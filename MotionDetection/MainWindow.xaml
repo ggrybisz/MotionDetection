@@ -1,17 +1,31 @@
 ﻿<Window x:Class="MotionDetection.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="671" Width="1024" Closing="Window_Closing">
-    <Grid Width="996" Height="552">
-        <Menu HorizontalAlignment="Left" Margin="0,-31,0,558" Name="menu1" Width="996">
+        Title="RatsDetector" Height="662" Width="1027" Closing="Window_Closing">
+    <Grid Width="1005" Height="552">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="13*" />
+            <RowDefinition Height="13*" />
+            <RowDefinition Height="526*" />
+        </Grid.RowDefinitions>
+        <Menu HorizontalAlignment="Left" Margin="0,-31,0,19" Name="menu1" Width="1005">
             <MenuItem Header="Plik">
                 <MenuItem Header="Otwórz" Click="OpenFile_Click" />
             </MenuItem>
             
         </Menu>
-        <Label Name="FrameCountLabel" Content="Frame: "></Label>
-        <Image Height="240" HorizontalAlignment="Left" Margin="12,29,0,0" Name="preprocessedImage" Stretch="Fill" VerticalAlignment="Top" Width="320" />
-        <Image Height="480" HorizontalAlignment="Left" Margin="338,29,0,0" Name="finalImage" Stretch="Fill" VerticalAlignment="Top" Width="640" />
-        <Image Height="240" HorizontalAlignment="Left" Margin="12,275,0,0" Name="differenceImage" Stretch="Fill" VerticalAlignment="Top" Width="320" />
+        <Label Name="FrameCountLabel" Content="Frame: " Margin="0,0,9,0" Grid.RowSpan="3"></Label>
+        <Image Height="240" HorizontalAlignment="Left" Margin="12,3,0,0" Name="preprocessedImage" Stretch="Fill" VerticalAlignment="Top" Width="320" Grid.Row="2" />
+        <Image Height="480" HorizontalAlignment="Left" Margin="338,7,0,0" Name="finalImage" Stretch="Fill" VerticalAlignment="Top" Width="640" Grid.Row="2" />
+        <Image Height="240" HorizontalAlignment="Left" Margin="12,249,0,0" Name="differenceImage" Stretch="Fill" VerticalAlignment="Top" Width="320" Grid.Row="2" />
+        <StatusBar Height="28" HorizontalAlignment="Left" Name="botomStatusBar" VerticalAlignment="Top" Width="1005" Margin="0,494,0,0" Grid.Row="2">
+            <Label Content="Status: "  Height="28" HorizontalAlignment="Left" Name="botomStatuslabel" VerticalAlignment="Top" />
+            
+            <Label Content="Ok"  Height="28" HorizontalAlignment="Left" Name="botomStatusBarlabel" VerticalAlignment="Top" Width="61" Foreground="Green" />
+            
+        </StatusBar>
     </Grid>
+
+
+
 </Window>
