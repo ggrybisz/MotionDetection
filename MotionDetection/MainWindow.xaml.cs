@@ -86,7 +86,7 @@ namespace MotionDetection
 
 
                 openFile.IsEnabled = false;
-                abourButton.Visibility = Visibility.Visible;
+                abourButton.IsEnabled = true;
             }
             else { botomStatusBarlabel.Content = "W8"; }
         }
@@ -152,7 +152,8 @@ namespace MotionDetection
             }
             processMovieThread.Abort();
             openFile.IsEnabled = true;
-            abourButton.Visibility = Visibility.Hidden;
+            abourButton.IsEnabled=false;
+            
         }
     }
 }
