@@ -38,13 +38,13 @@ namespace MotionDetection
                 Bitmap videoFrame;
 
                 processor.Background = videoReader.ReadVideoFrame();
-
+                
                 int i = 0;
 
                 while ((videoFrame = videoReader.ReadVideoFrame()) != null)
                 {
                     Bitmap preprocess = processor.preprocessImage(videoFrame);
-                    this.Dispatcher.Invoke(new Action(() => frameCountLabel.Content = "Frame: " + ++i));
+                    this.Dispatcher.Invoke(new Action(() => frameCountLabel.Content = "Czas: " + (int)(++i /videoReader.FrameRate )+ "s"));
                     this.Dispatcher.Invoke(new Action(() => preprocessedImage.Source = VideoProcessor.convertBitmap(preprocess)));
 
                     Bitmap diff = processor.findDifference(preprocess);
@@ -81,14 +81,19 @@ namespace MotionDetection
                 //m
                 startButton.Visibility = Visibility.Visible;
                 pathLabel.Content = "Ścieżka: " + path.OriginalString;
-
-
                 //m
+                botomStatusBarlabel.Content = "Ok";
+
 
             }
+            else { botomStatusBarlabel.Content = "W8"; }
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (processMovieThread.ThreadState == ThreadState.Suspended)
+            {
+                processMovieThread.Resume();
+            }
             processMovieThread.Abort();
         }
         private void startButton_Click(object sender, RoutedEventArgs e)
@@ -100,16 +105,28 @@ namespace MotionDetection
             //m
             thirdNumberLabel.Visibility = Visibility.Visible;
             //m
-            processMovieThread.Start();
+            
             //m
             startButton.Visibility = Visibility.Hidden;
             //m
             stopButton.Visibility = Visibility.Visible;
+
+            botomStatusBarlabel.Content = "PLAY";
+            if (processMovieThread.ThreadState == ThreadState.Suspended)
+            {
+                processMovieThread.Resume();
+            }
+            else
+            {
+                processMovieThread.Start();
+            }
+
         }
         private void stopButton_Click(object sender, RoutedEventArgs e)
         {
             //m
-            processMovieThread.Abort();
+            processMovieThread.Suspend();
+            
 
             //m
             // nie wiem jak wyciscic wszystkie 3 image
@@ -119,6 +136,9 @@ namespace MotionDetection
             stopButton.Visibility = Visibility.Hidden;
             //m
             pathLabel.Content = "";
+
+           botomStatusBarlabel.Content = "STOP";
+           startButton.Visibility = Visibility.Visible;
         }
     }
 }

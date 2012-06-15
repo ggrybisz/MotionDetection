@@ -25,10 +25,10 @@
                 <Label Content="Status: " Height="28" Name="botomStatuslabel" />
             </StatusBarItem>
             <StatusBarItem Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left">
-                <Label Content="Ok" Height="28"  Name="botomStatusBarlabel"  Width="41" Foreground="Green"  />
+                <Label Content="W8" Height="28"  Name="botomStatusBarlabel"  Width="41" Foreground="Green"  />
             </StatusBarItem>
             <StatusBarItem Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left">
-                <Label Name="frameCountLabel" Content="" Width="50"></Label>
+                <Label Name="frameCountLabel" Content="" Width="70"></Label>
             </StatusBarItem>
             <StatusBarItem VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,0">
                 <Label Height="28" HorizontalContentAlignment="Right" Name="pathLabel" Width="686" />
