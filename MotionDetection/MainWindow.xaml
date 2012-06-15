@@ -6,7 +6,8 @@
         <Grid Width="996" Height="552">
             <Menu HorizontalAlignment="Left" Margin="-4,-31,0,558" Name="menu1" Width="1003">
                 <MenuItem Header="Plik">
-                    <MenuItem Header="Otwórz filmik" Click="OpenFile_Click" />
+                    <MenuItem Name="openFile"  Header="Otwórz filmik" Click="OpenFile_Click" IsEnabled="True" />
+                    <MenuItem Name="abourButton" Header="Abour" Click="abourButton_Click" Visibility="Hidden"/>
                 </MenuItem>
             </Menu>
             <Grid Margin="0,0,0,0" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="23" Width="200">

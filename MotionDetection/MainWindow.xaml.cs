@@ -68,7 +68,7 @@ namespace MotionDetection
 
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
-
+            
             processor = new VideoProcessor();
             videoReader = new VideoFileReader();
 
@@ -85,6 +85,8 @@ namespace MotionDetection
                 botomStatusBarlabel.Content = "Ok";
 
 
+                openFile.IsEnabled = false;
+                abourButton.Visibility = Visibility.Visible;
             }
             else { botomStatusBarlabel.Content = "W8"; }
         }
@@ -119,6 +121,7 @@ namespace MotionDetection
             else
             {
                 processMovieThread.Start();
+
             }
 
         }
@@ -139,6 +142,17 @@ namespace MotionDetection
 
            botomStatusBarlabel.Content = "STOP";
            startButton.Visibility = Visibility.Visible;
+        }
+
+        private void abourButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (processMovieThread.ThreadState == ThreadState.Suspended)
+            {
+                processMovieThread.Resume();
+            }
+            processMovieThread.Abort();
+            openFile.IsEnabled = true;
+            abourButton.Visibility = Visibility.Hidden;
         }
     }
 }
