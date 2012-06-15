@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using System.Collections.Concurrent;
 using System.Threading;
 
+
 namespace MotionDetection
 {
     /// <summary>
@@ -16,8 +17,6 @@ namespace MotionDetection
     /// </summary>
     public partial class MainWindow : Window
     {
-        string path;
-
         VideoProcessor processor;
         VideoFileReader videoReader;
 
@@ -50,24 +49,19 @@ namespace MotionDetection
 
                     Bitmap diff = processor.findDifference(preprocess);
                     preprocess.Dispose();
-                    preprocess = null;
                   
                     this.Dispatcher.Invoke(new Action(() => differenceImage.Source = VideoProcessor.convertBitmap(diff)));
                     
                     Bitmap final = processor.showMotion(videoFrame, diff);
                     diff.Dispose();
-                    diff = null;
 
                     this.Dispatcher.Invoke(new Action(() => finalImage.Source = VideoProcessor.convertBitmap(final)));
                     final.Dispose();
-                    final = null;
                     videoFrame.Dispose();
-                    videoFrame = null;
                 }
                 i = 0;
                 videoReader.Dispose();
                 videoReader.Close();
-                
                 
             }
         }
@@ -82,10 +76,14 @@ namespace MotionDetection
 
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                path = dialog.FileName;
-                videoReader.Open(path);
+                Uri path = new Uri(dialog.FileName);
+                videoReader.Open(path.OriginalString);
+                //m
+                lstart.Visibility = Visibility.Visible;
+                sciezka.Content = "Ścieżka: "+path.OriginalString;
+               
 
-                //processMovieThread.Start();
+                //m
                
             }
         }
@@ -95,19 +93,45 @@ namespace MotionDetection
             processMovieThread.Abort();
         }
 
+       
+
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            if ((processMovieThread.ThreadState == ThreadState.Unstarted) || (processMovieThread.ThreadState == ThreadState.Aborted))
-            {
-                processMovieThread.Start();
-                button1.Content = "Stop";
-            }
-            else
-            {
-                processMovieThread.Abort();
+            
+            //m
+            jedynka.Visibility = Visibility.Visible;
+            //m
+            dwojka.Visibility = Visibility.Visible;
+            //m
+            trojka.Visibility = Visibility.Visible;
+            //m
+            processMovieThread.Start();
+            //m
+            lstart.Visibility = Visibility.Hidden;
+            //m
+            lstop.Visibility = Visibility.Visible;
 
-                button1.Content = "Play";
-            }
+        }
+
+        private void button2_Click(object sender, RoutedEventArgs e)
+        {
+            //m
+            processMovieThread.Abort();
+            
+            //m
+            // nie wiem jak wyciscic wszystkie 3 image
+
+
+            //m
+            lstop.Visibility = Visibility.Hidden;
+            //m
+            sciezka.Content = "";
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
+           
         }
     }
 }
