@@ -172,7 +172,7 @@ namespace MotionDetection
 
             foreach (Rectangle rc in rects)
             {
-                g.DrawRectangle(bluePen, rc);
+                //g.DrawRectangle(bluePen, rc);
 
                 rat1.checkRectangleProximity(rc);
                
