@@ -55,7 +55,7 @@ namespace MotionDetection
 
             pixelateFilter = new Pixellate();
             pixelateFilter.PixelSize = 10;
-
+            
             differenceFilter = new Difference();
             thresholdFilter = new Threshold(15);
             grayscaleFilter = new Grayscale(0.2125, 0.7154, 0.0721);

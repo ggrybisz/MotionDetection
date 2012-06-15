@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MotionDetection.Properties
-{
-
-
+namespace MotionDetection.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -22,49 +22,176 @@ namespace MotionDetection.Properties
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources
-    {
-
+    public class Resources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources()
-        {
+        internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if ((resourceMan == null))
-                {
+        public static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MotionDetection.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        public static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zatrzymaj.
+        /// </summary>
+        public static string ABORT_BUTTON_TEXT {
+            get {
+                return ResourceManager.GetString("ABORT_BUTTON_TEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  .
+        /// </summary>
+        public static string DEFAULT_FPS_LABEL {
+            get {
+                return ResourceManager.GetString("DEFAULT_FPS_LABEL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brak pliku wideo.
+        /// </summary>
+        public static string DEFAULT_PATH_LABEL {
+            get {
+                return ResourceManager.GetString("DEFAULT_PATH_LABEL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Czas: .
+        /// </summary>
+        public static string FPS_LABEL_BEGIN {
+            get {
+                return ResourceManager.GetString("FPS_LABEL_BEGIN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to LOADED.
+        /// </summary>
+        public static string LOADED_STATUS {
+            get {
+                return ResourceManager.GetString("LOADED_STATUS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rat Detector.
+        /// </summary>
+        public static string MAIN_WINDOW_NAME {
+            get {
+                return ResourceManager.GetString("MAIN_WINDOW_NAME", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Otwórz.
+        /// </summary>
+        public static string OPEN_FILE_TEXT {
+            get {
+                return ResourceManager.GetString("OPEN_FILE_TEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ścieżka: .
+        /// </summary>
+        public static string PATH_LABEL_BEGIN {
+            get {
+                return ResourceManager.GetString("PATH_LABEL_BEGIN", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Przerwij!.
+        /// </summary>
+        public static string PAUSE_BUTTON_TEXT {
+            get {
+                return ResourceManager.GetString("PAUSE_BUTTON_TEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PAUSED.
+        /// </summary>
+        public static string PAUSED_STATUS {
+            get {
+                return ResourceManager.GetString("PAUSED_STATUS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PLAY.
+        /// </summary>
+        public static string PLAY_STATUS {
+            get {
+                return ResourceManager.GetString("PLAY_STATUS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PROCESS_MOVIE_THREAD.
+        /// </summary>
+        public static string PROCESS_MOVIE_THREAD_TITLE {
+            get {
+                return ResourceManager.GetString("PROCESS_MOVIE_THREAD_TITLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wykryj!.
+        /// </summary>
+        public static string START_BUTTON_TEXT {
+            get {
+                return ResourceManager.GetString("START_BUTTON_TEXT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status: .
+        /// </summary>
+        public static string STATUS_LABEL {
+            get {
+                return ResourceManager.GetString("STATUS_LABEL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WAIT.
+        /// </summary>
+        public static string WAIT_STATUS {
+            get {
+                return ResourceManager.GetString("WAIT_STATUS", resourceCulture);
             }
         }
     }
