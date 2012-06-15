@@ -7,12 +7,12 @@
             <Menu HorizontalAlignment="Left" Margin="-4,-31,0,558" Name="menu1" Width="1003">
                 <MenuItem Header="Plik">
                     <MenuItem Name="openFile"  Header="Otwórz filmik" Click="OpenFile_Click" IsEnabled="True" />
-                    <MenuItem Name="abourButton" Header="Abour" Click="abourButton_Click" IsEnabled="False"/>
+                    <MenuItem Name="resetButton" Header="Zatrzymaj" Click="resetButton_Click" IsEnabled="False"/>
                 </MenuItem>
             </Menu>
             <Grid Margin="0,0,0,0" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="23" Width="200">
                 <Button Content="Wykryj!" Height="23" HorizontalAlignment="Left" Name="startButton" VerticalAlignment="Top" Width="200" Click="startButton_Click" Visibility="Hidden" />
-                <Button Content="Przerwij!" Height="23" HorizontalAlignment="Left" Name="stopButton" VerticalAlignment="Top" Width="200" Click="stopButton_Click" Visibility="Hidden" />
+                <Button Content="Przerwij!" Height="23" HorizontalAlignment="Left" Name="pauseButton" VerticalAlignment="Top" Width="200" Click="pauseButton_Click" Visibility="Hidden" />
             </Grid>
             <Image Height="240" HorizontalAlignment="Left" Margin="12,60,0,0" Name="preprocessedImage" Stretch="Fill" VerticalAlignment="Top" Width="320" UseLayoutRounding="False" />
             <Image Height="492" HorizontalAlignment="Left" Margin="344,60,0,0" Name="finalImage" Stretch="Fill" VerticalAlignment="Top" Width="640" UseLayoutRounding="False" />

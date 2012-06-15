@@ -78,15 +78,12 @@ namespace MotionDetection
             {
                 Uri path = new Uri(dialog.FileName);
                 videoReader.Open(path.OriginalString);
-                //m
                 startButton.Visibility = Visibility.Visible;
                 pathLabel.Content = "Ścieżka: " + path.OriginalString;
-                //m
                 botomStatusBarlabel.Content = "Ok";
 
-
                 openFile.IsEnabled = false;
-                abourButton.IsEnabled = true;
+                resetButton.IsEnabled = true;
             }
             else { botomStatusBarlabel.Content = "W8"; }
         }
@@ -100,18 +97,12 @@ namespace MotionDetection
         }
         private void startButton_Click(object sender, RoutedEventArgs e)
         {
-            //m
             firstNumberLabel.Visibility = Visibility.Visible;
-            //m
             secondNumberLabel.Visibility = Visibility.Visible;
-            //m
             thirdNumberLabel.Visibility = Visibility.Visible;
-            //m
-            
-            //m
+
             startButton.Visibility = Visibility.Hidden;
-            //m
-            stopButton.Visibility = Visibility.Visible;
+            pauseButton.Visibility = Visibility.Visible;
 
             botomStatusBarlabel.Content = "PLAY";
             if (processMovieThread.ThreadState == ThreadState.Suspended)
@@ -125,26 +116,18 @@ namespace MotionDetection
             }
 
         }
-        private void stopButton_Click(object sender, RoutedEventArgs e)
+        private void pauseButton_Click(object sender, RoutedEventArgs e)
         {
-            //m
             processMovieThread.Suspend();
             
-
-            //m
-            // nie wiem jak wyciscic wszystkie 3 image
-
-
-            //m
-            stopButton.Visibility = Visibility.Hidden;
-            //m
+            pauseButton.Visibility = Visibility.Hidden;
             pathLabel.Content = "";
 
            botomStatusBarlabel.Content = "STOP";
            startButton.Visibility = Visibility.Visible;
         }
 
-        private void abourButton_Click(object sender, RoutedEventArgs e)
+        private void resetButton_Click(object sender, RoutedEventArgs e)
         {
             if (processMovieThread.ThreadState == ThreadState.Suspended)
             {
@@ -152,7 +135,7 @@ namespace MotionDetection
             }
             processMovieThread.Abort();
             openFile.IsEnabled = true;
-            abourButton.IsEnabled=false;
+            resetButton.IsEnabled=false;
             
         }
     }

@@ -28,22 +28,16 @@ namespace MotionDetection
                 width = value.Width;
             }
         }
-        BitmapData bitmapData;
 
+        BitmapData bitmapData;
         Pixellate pixelateFilter;
 
         Difference differenceFilter;
         Threshold thresholdFilter;
         Grayscale grayscaleFilter;
         Erosion erosionFilter;
-        Opening openingFilter;
-        Dilatation dilatationFilter;
-        Edges edgesFilter;
 
         MoveTowards moveTowardsFilter;
-
-        IFilter extractChannel;
-        Merge mergeFilter;
 
         FiltersSequence filters1;
         FiltersSequence filters2;
@@ -66,12 +60,7 @@ namespace MotionDetection
             thresholdFilter = new Threshold(15);
             grayscaleFilter = new Grayscale(0.2125, 0.7154, 0.0721);
             erosionFilter = new Erosion();
-            openingFilter = new Opening();
-            dilatationFilter = new Dilatation();
-            edgesFilter = new Edges();
 
-            extractChannel = new ExtractChannel(RGB.R);
-            mergeFilter = new Merge();
             moveTowardsFilter = new MoveTowards();
 
             filters1 = new FiltersSequence();
@@ -132,13 +121,10 @@ namespace MotionDetection
             {
                 counter = 0;
 
-
                 moveTowardsFilter.StepSize = 100;
                 moveTowardsFilter.OverlayImage = tmpImage;
                 moveTowardsFilter.ApplyInPlace(this.background);
-
             }
-
 
             differenceFilter.OverlayImage = background;
 
@@ -160,23 +146,14 @@ namespace MotionDetection
 
             BlobCounter blobCounter = new BlobCounter();
 
-            // get object rectangles
             blobCounter.ProcessImage(motionImage);
             Rectangle[] rects = blobCounter.GetObjectsRectangles();
 
-            // create graphics object from initial image
             Graphics g = Graphics.FromImage(originalImage);
-            // draw each rectangle
-
-            Pen bluePen = new Pen(Color.Blue, 1);
 
             foreach (Rectangle rc in rects)
             {
-                //g.DrawRectangle(bluePen, rc);
-
                 rat1.checkRectangleProximity(rc);
-               
-
                 rat2.checkRectangleProximity(rc);
                 
             }
@@ -188,7 +165,6 @@ namespace MotionDetection
             rat1.drawTracker(g);
             rat2.drawTracker(g);
             
-            bluePen.Dispose();
             g.Dispose();
 
             return originalImage;
