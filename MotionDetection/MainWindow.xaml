@@ -1,31 +1,38 @@
 ﻿<Window x:Class="MotionDetection.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="RatsDetector" Height="662" Width="1027" Closing="Window_Closing">
-    <Grid Width="1005" Height="552">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="13*" />
-            <RowDefinition Height="13*" />
-            <RowDefinition Height="526*" />
-        </Grid.RowDefinitions>
-        <Menu HorizontalAlignment="Left" Margin="0,-31,0,19" Name="menu1" Width="1005">
-            <MenuItem Header="Plik">
-                <MenuItem Header="Otwórz" Click="OpenFile_Click" />
-            </MenuItem>
-            
-        </Menu>
-        <Label Name="FrameCountLabel" Content="Frame: " Margin="0,0,9,0" Grid.RowSpan="3"></Label>
-        <Image Height="240" HorizontalAlignment="Left" Margin="12,3,0,0" Name="preprocessedImage" Stretch="Fill" VerticalAlignment="Top" Width="320" Grid.Row="2" />
-        <Image Height="480" HorizontalAlignment="Left" Margin="338,7,0,0" Name="finalImage" Stretch="Fill" VerticalAlignment="Top" Width="640" Grid.Row="2" />
-        <Image Height="240" HorizontalAlignment="Left" Margin="12,249,0,0" Name="differenceImage" Stretch="Fill" VerticalAlignment="Top" Width="320" Grid.Row="2" />
-        <StatusBar Height="28" HorizontalAlignment="Left" Name="botomStatusBar" VerticalAlignment="Top" Width="1005" Margin="0,494,0,0" Grid.Row="2">
-            <Label Content="Status: "  Height="28" HorizontalAlignment="Left" Name="botomStatuslabel" VerticalAlignment="Top" />
-            
-            <Label Content="Ok"  Height="28" HorizontalAlignment="Left" Name="botomStatusBarlabel" VerticalAlignment="Top" Width="61" Foreground="Green" />
-            
+        Title="Rats Detector" Height="671" Width="1024" Closing="Window_Closing" WindowStyle="SingleBorderWindow" ResizeMode="NoResize" >
+    <Grid Height="642" Width="1012">
+        <Grid Width="996" Height="552">
+            <Menu HorizontalAlignment="Left" Margin="-4,-31,0,558" Name="menu1" Width="1003">
+                <MenuItem Header="Plik">
+                    <MenuItem Header="Otwórz filmik" Click="OpenFile_Click" />
+                </MenuItem>
+            </Menu>
+            <Grid Margin="0,0,0,0" HorizontalAlignment="Left"  VerticalAlignment="Top" Height="23" Width="200">
+                <Button Content="Wykryj!" Height="23" HorizontalAlignment="Left" Name="startButton" VerticalAlignment="Top" Width="200" Click="startButton_Click" Visibility="Hidden" />
+                <Button Content="Przerwij!" Height="23" HorizontalAlignment="Left" Name="stopButton" VerticalAlignment="Top" Width="200" Click="stopButton_Click" Visibility="Hidden" />
+            </Grid>
+            <Image Height="240" HorizontalAlignment="Left" Margin="12,60,0,0" Name="preprocessedImage" Stretch="Fill" VerticalAlignment="Top" Width="320" UseLayoutRounding="False" />
+            <Image Height="492" HorizontalAlignment="Left" Margin="344,60,0,0" Name="finalImage" Stretch="Fill" VerticalAlignment="Top" Width="640" UseLayoutRounding="False" />
+            <Image Height="240" HorizontalAlignment="Left" Margin="12,312,0,0" Name="differenceImage" Stretch="Fill" VerticalAlignment="Top" Width="320" UseLayoutRounding="False" />
+            <Label Content="1" Background="White" Height="28" HorizontalAlignment="Left" Margin="12,59,0,0" Name="firstNumberLabel" VerticalAlignment="Top" Visibility="Hidden" />
+            <Label Content="2" Background="White" Height="28" HorizontalAlignment="Left" Margin="12,311,0,0" Name="secondNumberLabel" VerticalAlignment="Top" Visibility="Hidden" />
+            <Label Content="3" Background="White" Height="28" HorizontalAlignment="Left" Margin="344,59,0,0" Name="thirdNumberLabel" VerticalAlignment="Top" Visibility="Hidden" />
+        </Grid>
+        <StatusBar Height="30" HorizontalAlignment="Left" Name="botomStatusBar" VerticalAlignment="Bottom" Width="1011" Margin="1,0,0,0">
+            <StatusBarItem Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <Label Content="Status: " Height="28" Name="botomStatuslabel" />
+            </StatusBarItem>
+            <StatusBarItem Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <Label Content="Ok" Height="28"  Name="botomStatusBarlabel"  Width="41" Foreground="Green"  />
+            </StatusBarItem>
+            <StatusBarItem Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left">
+                <Label Name="frameCountLabel" Content="" Width="50"></Label>
+            </StatusBarItem>
+            <StatusBarItem VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,0">
+                <Label Height="28" HorizontalContentAlignment="Right" Name="pathLabel" Width="686" />
+            </StatusBarItem>
         </StatusBar>
     </Grid>
-
-
-
 </Window>

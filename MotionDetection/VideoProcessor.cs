@@ -9,6 +9,8 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Drawing.Imaging;
 using AForge.Imaging;
+using System.ComponentModel;
+using System.Runtime.InteropServices;
 
 namespace MotionDetection
 {
@@ -19,9 +21,12 @@ namespace MotionDetection
         public Bitmap Background
         {
             get { return background; }
-            set { background = this.filters1.Apply(value);
-            height = value.Height;
-                    width=value.Width; }
+            set
+            {
+                background = this.filters1.Apply(value);
+                height = value.Height;
+                width = value.Width;
+            }
         }
         BitmapData bitmapData;
 
@@ -43,8 +48,8 @@ namespace MotionDetection
         FiltersSequence filters1;
         FiltersSequence filters2;
 
-        Vector rat1;
-        Vector rat2;
+        Tracker rat1;
+        Tracker rat2;
 
         private int counter;
         private int height;
@@ -72,32 +77,45 @@ namespace MotionDetection
             filters1 = new FiltersSequence();
             filters1.Add(pixelateFilter);
             filters1.Add(grayscaleFilter);
-            
+
             filters2 = new FiltersSequence();
 
             filters2.Add(differenceFilter);
             filters2.Add(thresholdFilter);
             filters2.Add(erosionFilter);
 
-            rat1 = new Vector(0, 0);
-            rat2 = new Vector(0, 0);
+            rat1 = new Tracker(640 / 2, 480 / 2, Color.Red);
+
+            rat2 = new Tracker(400, 300, Color.Green);
 
             counter = 0;
         }
 
         public static BitmapSource convertBitmap(Bitmap source)
         {
-            System.Console.WriteLine("source image width"+source.Width);
-            System.Console.WriteLine("source image height"+source.Height);
+            BitmapSource bitSrc = null;
 
-            IntPtr ip = source.GetHbitmap();
-            BitmapSource bs = null;
+            var hBitmap = source.GetHbitmap();
 
-            bs = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(ip,
-               IntPtr.Zero, Int32Rect.Empty,
-               System.Windows.Media.Imaging.BitmapSizeOptions.FromEmptyOptions());
+            try
+            {
+                bitSrc = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap(
+                    hBitmap,
+                    IntPtr.Zero,
+                    Int32Rect.Empty,
+                    BitmapSizeOptions.FromEmptyOptions());
+            }
+            catch (Win32Exception)
+            {
+                bitSrc = null;
+            }
+            finally
+            {
+                
+                NativeMethods.DeleteObject(hBitmap);
+            }
 
-            return bs;
+            return bitSrc;
         }
 
         public Bitmap preprocessImage(Bitmap currentFrame)
@@ -126,7 +144,7 @@ namespace MotionDetection
 
             bitmapData = tmpImage.LockBits(new Rectangle(0, 0, width, height),
               ImageLockMode.ReadWrite, PixelFormat.Format8bppIndexed);
-            System.Console.WriteLine("background = "+background.PixelFormat.ToString());
+            System.Console.WriteLine("background = " + background.PixelFormat.ToString());
             System.Console.WriteLine("image = " + tmpImage.PixelFormat.ToString());
 
             Bitmap tmpImage2 = filters2.Apply(bitmapData);
@@ -145,67 +163,42 @@ namespace MotionDetection
             // get object rectangles
             blobCounter.ProcessImage(motionImage);
             Rectangle[] rects = blobCounter.GetObjectsRectangles();
+
             // create graphics object from initial image
             Graphics g = Graphics.FromImage(originalImage);
             // draw each rectangle
 
-            Vector TopLeft = new Vector(640/2, 480/2);
-            Vector BottomRight = new Vector(640/2, 480/2);
-            
+            Pen bluePen = new Pen(Color.Blue, 1);
 
-
-            using (Pen pen = new Pen(Color.Red, 2))
+            foreach (Rectangle rc in rects)
             {
-                Pen bluePen = new Pen(Color.Blue, 1);
-                foreach (Rectangle rc in rects)
-                {
-                    g.DrawRectangle(bluePen, rc);
+                g.DrawRectangle(bluePen, rc);
 
-                    if (rc.X < TopLeft.X)
-                        TopLeft.X = rc.X;
+                rat1.checkRectangleProximity(rc);
+               
 
-                    if (rc.Y < TopLeft.Y)
-                        TopLeft.Y = rc.Y;
-
-                    if (rc.X > BottomRight.X)
-                        BottomRight.X = rc.X;
-
-                    if (rc.Y > BottomRight.Y)
-                        BottomRight.Y = rc.Y;
-
-                    if (rat1.X == 0)
-                    {
-                        rat1.X = rc.X;
-                        rat1.Y = rc.Y;
-                    }
-
-                    int centerX = ((int)BottomRight.X - (int)TopLeft.X) / 2;
-                    int centerY = ((int)BottomRight.Y - (int)TopLeft.Y) / 2;
-
-                    rat1.X = TopLeft.X;
-                    rat1.Y = TopLeft.Y;
-                    
-                    //if ((rc.Width > 15) && (rc.Height > 15))
-                    //{
-                   /* if (Math.Abs((rc.X + rc.Width / 2) - rat1.X) < 100)
-                        {
-                            rat1.X = rc.X+rc.Width/2;
-                            
-                        }
-
-                        if(Math.Abs((rc.Y+rc.Height/2) - rat1.Y) < 100)
-                        {
-                            rat1.Y = rc.Y+rc.Height/2;
-                        }
-                   // }*/
-                }
-
-                g.DrawRectangle(pen, new Rectangle((int)rat1.X - 10, (int)rat1.X - 10, 20, 20));
+                rat2.checkRectangleProximity(rc);
+                
             }
+            rat1.computeCenter();
+            rat2.computeCenter();
 
+            rat2.compareAndChange(rat1);
+
+            rat1.drawTracker(g);
+            rat2.drawTracker(g);
+            
+            bluePen.Dispose();
             g.Dispose();
 
             return originalImage;
         }
+        internal static class NativeMethods
+        {
+            [DllImport("gdi32.dll")]
+            [return: MarshalAs(UnmanagedType.Bool)]
+            internal static extern bool DeleteObject(IntPtr hObject);
+        }
+       
     }
 }

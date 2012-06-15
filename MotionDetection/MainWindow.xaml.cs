@@ -8,7 +8,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Collections.Concurrent;
 using System.Threading;
-//dodalem cos:P k.bzowski
+
 
 namespace MotionDetection
 {
@@ -39,19 +39,19 @@ namespace MotionDetection
 
                 processor.Background = videoReader.ReadVideoFrame();
 
-                int i=0;
+                int i = 0;
 
-                while((videoFrame = videoReader.ReadVideoFrame())!=null)
+                while ((videoFrame = videoReader.ReadVideoFrame()) != null)
                 {
                     Bitmap preprocess = processor.preprocessImage(videoFrame);
-                    this.Dispatcher.Invoke(new Action(() => FrameCountLabel.Content = "Frame: " + ++i));
+                    this.Dispatcher.Invoke(new Action(() => frameCountLabel.Content = "Frame: " + ++i));
                     this.Dispatcher.Invoke(new Action(() => preprocessedImage.Source = VideoProcessor.convertBitmap(preprocess)));
 
                     Bitmap diff = processor.findDifference(preprocess);
                     preprocess.Dispose();
-                  
+
                     this.Dispatcher.Invoke(new Action(() => differenceImage.Source = VideoProcessor.convertBitmap(diff)));
-                    
+
                     Bitmap final = processor.showMotion(videoFrame, diff);
                     diff.Dispose();
 
@@ -62,13 +62,13 @@ namespace MotionDetection
                 i = 0;
                 videoReader.Dispose();
                 videoReader.Close();
-                
+
             }
         }
 
         private void OpenFile_Click(object sender, RoutedEventArgs e)
         {
-      
+
             processor = new VideoProcessor();
             videoReader = new VideoFileReader();
 
@@ -78,15 +78,47 @@ namespace MotionDetection
             {
                 Uri path = new Uri(dialog.FileName);
                 videoReader.Open(path.OriginalString);
+                //m
+                startButton.Visibility = Visibility.Visible;
+                pathLabel.Content = "Ścieżka: " + path.OriginalString;
 
-                processMovieThread.Start();
-               
+
+                //m
+
             }
         }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             processMovieThread.Abort();
+        }
+        private void startButton_Click(object sender, RoutedEventArgs e)
+        {
+            //m
+            firstNumberLabel.Visibility = Visibility.Visible;
+            //m
+            secondNumberLabel.Visibility = Visibility.Visible;
+            //m
+            thirdNumberLabel.Visibility = Visibility.Visible;
+            //m
+            processMovieThread.Start();
+            //m
+            startButton.Visibility = Visibility.Hidden;
+            //m
+            stopButton.Visibility = Visibility.Visible;
+        }
+        private void stopButton_Click(object sender, RoutedEventArgs e)
+        {
+            //m
+            processMovieThread.Abort();
+
+            //m
+            // nie wiem jak wyciscic wszystkie 3 image
+
+
+            //m
+            stopButton.Visibility = Visibility.Hidden;
+            //m
+            pathLabel.Content = "";
         }
     }
 }
